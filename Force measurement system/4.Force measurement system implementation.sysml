@@ -7,7 +7,8 @@ package SystemImplemetation{
         import ForceMeasurementSystemPartDefinition::*;
         import ForceMeasurementSystemPortDefinition::*;
         import ForceMeasurementSystemSignalDefinition::*;
-
+        import ForceMeasurementSystemActionDefinition::*;
+        import ForceMeasurementSystemInterfaceDefinition::*;
         package ForceMeasurementSystemPartDefinition{
             part def ForceMeasurementSystem{
                 attribute Loadcellnumber:Real;
@@ -67,7 +68,7 @@ package SystemImplemetation{
                 attribute maintenanceTime: Time::DateTime; 
                 attribute inputvoltage:>ISQ::voltage;
                 attribute AccuracyClass:String;
-                port RoomtemperaturePort:TemperaturPorte;
+                port temperaturePort:TemperaturePort;
                 port powerPort:EnergyPort;
                 port massPort:MassPort;
                 port MeasuringinfoPort:MeasuringInfoPort;
@@ -108,7 +109,7 @@ package SystemImplemetation{
             part def MeasuringRing{}
             part def EnergySystem{
                 perform action provideEnergy;
-                port OutputEnergy:~Energy;
+                port OutputEnergyPort:~EnergyPort;
             }
 
         }
@@ -138,18 +139,18 @@ package SystemImplemetation{
         }
         package ForceMeasurementSystemInterfaceDefinition{
             interface def EnergyInterface{
-                end p1:Energy;
-                end p2:~Energy;
+                end p1:EnergyPort;
+                end p2:~EnergyPort;
                 flow p2.inputVoltage to p1.inputVoltage;
             }
             interface def MessDataInterface{
-                end p1:MeasuringInfo;
-                end p2:~MeasuringInfo;
+                end p1:MeasuringInfoPort;
+                end p2:~MeasuringInfoPort;
                 flow p1.MessData to p2.MessData;
             }
             interface def TemperatureInterface{
-                end p1:Temperature;
-                end p2:~Temperature;
+                end p1:TemperaturePort;
+                end p2:~TemperaturePort;
                 flow p2.Roomtemperature to p1.Roomtemperature;
             }
         }
@@ -219,8 +220,6 @@ package SystemImplemetation{
                 
                 attribute num redefines ForceMeasurementSystemPartDefinition::ForceMeasurementSystem::Loadcellnumber=3;
                 attribute  redefines ForceMeasurementSystem::maintenanceTime=3600[h]; 
-                port messResultPort:~MeasuringInfoPort;
-                port temperaturePort: TemperaturePort;
                 perform ActionTree::ForceMeasurement redefines ForceMeasurement;
                 exhibit state MeasuringSystemState redefines MeasuringSystemState;
                     
@@ -235,36 +234,31 @@ package SystemImplemetation{
                     attribute  loadcellCapacity redefines LoadCell::maximumCapacity=40[kg];
                     attribute loadcelLimitedLateralLoad redefines LoadCell::limitedLateralLoad=120[N];
                     attribute loadcellAccuracyClass redefines LoadCell::AccuracyClass="C3";	
-                    port messinfoPort:MeasuringInfoPort;
-                    port  energyPort : EnergyPort;
-                    port temperaturePort: TemperaturePort;
+                    
                     }
                 part Measuringring:MeasuringRing;
                 part Energysystem:EnergySystem{
                     perform ActionTree::provideEnergy redefines provideEnergy;
-                    port outputenergyPort:~EnergyPort;
+                    
                 }
-                interface energyInterface:ForceMeasurementSystemInterfaceDefinition::EnergyInterface
-                    connect Energysystem.outputenergyPort to loadcell_v1.energyPort;
-                interface TemperatureInterface:InterfaceDefinition::TemperatureInterface
+                interface energyInterface_v1:EnergyInterface
+                    connect Energysystem.OutputEnergyPort to loadcell_v1.powerPort;
+                interface TemperatureInterface_v1:TemperatureInterface
                     connect Forcemeasurementsystem_v1.temperaturePort to loadcell_v1.temperaturePort;
-                bind loadcell_v1.messinfoPort = Forcemeasurementsystem_v1.messResultPort;
-                satisfy requirements::TemperatureRequirement by Forcemeasurementsystem_v1{
-                    requirement TemperatureRequirement :>>requirements::TemperatureRequirement{
+
+                bind loadcell_v1.MeasuringinfoPort = Forcemeasurementsystem_v1.MessResultPort;
+
+                satisfy requirements::temperatureRequirement by Forcemeasurementsystem_v1{
                         attribute redefines temperatureActual = Forcemeasurementsystem_v1.temperaturePort.Roomtemperature;
                         attribute redefines maximumWorkingTemperature = Forcemeasurementsystem_v1.loadcell_v1.loadcellTmax;
                         attribute redefines minimumWorkingTemperature = Forcemeasurementsystem_v1.loadcell_v1.loadcellTmin;
-                        }
+                    
                 }
-                satisfy requirements::MeasurementRequirement by Forcemeasurementsystem_v1{
-                    requirement MeasurementRequirement :>> requirements::MeasurementRequirement{
+                satisfy requirements::measurementRequirement by Forcemeasurementsystem_v1{
                         attribute redefines LoadAllowed = Forcemeasurementsystem_v1.num * Forcemeasurementsystem_v1.loadcell_v1.loadcellCapacity;
-                    }
                 }
-                satisfy requirements::AccuracyRequirement by Forcemeasurementsystem_v1{
-                    requirement AccuracyRequirement :>> requirements::AccuracyRequirement{
+                satisfy requirements::accuracyRequirement by Forcemeasurementsystem_v1{
                         attribute redefines AccuracyClassActual = Forcemeasurementsystem_v1.loadcell_v1.loadcellAccuracyClass;
-                    }
                 }
                 
             }
@@ -278,7 +272,7 @@ package SystemImplemetation{
             action provideEnergy:ForceMeasurementSystemActionDefinition::provideEnergy;
         }
         package requirements{
-            requirement TemperatureRequirement: ForceMeasurementSystemRequirementDefinition::Temperature{
+            requirement temperatureRequirement:ForceMeasurementSystemRequirementDefinition::TemperatureRequirement{
             
             	doc /* The measuring system should run normally in certain temperature range.*/
 		        attribute redefines maximumTemperature =60['°C'];
@@ -292,13 +286,13 @@ package SystemImplemetation{
 		        require constraint {maximumWorkingTemperature>maximumTemperature}
 		        require constraint {minimumTemperature>minimumWorkingTemperature}
         	}
-            requirement  AccuracyRequirement:'Requirement Definition'::AccuracyRequirement{
+            requirement  accuracyRequirement:ForceMeasurementSystemRequirementDefinition::AccuracyRequirement{
                 doc /* The load cell should provide a certain static measurement Accuracy. */
                 attribute redefines AccuracyClass="C3";
                 attribute redefines AccuracyClassActual:String;
                 require constraint {AccuracyClass==AccuracyClassActual}
             }
-            requirement MeasurementRequirement: RequirementDefinition::MeasurementRequirement {
+            requirement measurementRequirement:ForceMeasurementSystemRequirementDefinition::MeasurementRequirement {
                 doc /* The measuring system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
                 
                 attribute redefines staticLoadRequired =35[kg] ;
