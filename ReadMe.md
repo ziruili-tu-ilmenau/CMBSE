@@ -11,5 +11,5 @@ The examples are used to show the collaboration between OEM and the supplier foc
 ## How to check the model
 To import and check the model, the relevant installer for eclipse plugins (KerML and SysML Editors & PlantUML visualization) or Jupyter kernel (SysML language kernel) is required. 
 The further installation guides can be found in the **SysML-v2-Release repository** [SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master), in the _install_ dictionary.
-> To visulize the textual notations of the model in the eclipse, model project _sysml.library_ in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(install/eclipse/README.adoc)_. 
+> To visulize the textual notations of the model in the eclipse, model project **sysml.library** in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(Path: install/eclipse/README.adoc)_. 
 
