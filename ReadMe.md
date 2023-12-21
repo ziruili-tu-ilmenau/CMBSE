@@ -1,19 +1,14 @@
 # Collaborative Model-Based Systems Engineering
-This repository provides the example SysML v2 model and the figures used in the Paper: 
-**Collaborative Model-Based Systems Engineering using Dataspaces and SysML v2**
+This repository provides the example SysML v2 model, which includes:
+* A simplified example model that shows the basic structure of SysML v2 
+* A concrete example model about measurement system that enables precise force measurement capabilities 
+* One necessary sub-system of measurement system as the load cell model.  
+The examples are used to show the collaboration between OEM and the supplier focused on the aspects of model development and model exchange. The collaboration process is based on the idea of the following CMBSE approach. 
+![Collaboration process between OEM and suppliers using SysML v2 model](https://github.com/ziruili-tu-ilmenau/CMBSE/.git/Figure 4 Collaboration process between OEM and suppliers using SysML v2 model.png)
+
 
 ## How to check the model
-To import and check the model, the relevant eclipse plugins or Jupyter kernel are required.
-The further installation guides can be found on the SysML-v2-Release repository [SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master), in the _install_ dictionary.
+To import and check the model, the relevant installer for eclipse plugins (KerML and SysML Editors & PlantUML visualization) or Jupyter kernel (SysML language kernel) is required. 
+The further installation guides can be found in the **SysML-v2-Release repository** [SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master), in the _install_ dictionary.
+> To visulize the textual notations of the model in the eclipse, model project _sysml.library_ in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(install/eclipse/README.adoc)_. 
 
-## Figures information and references
-Figure 1: Directly used from the author Prof. Dr. Stephan Husung's previous paper [DOI](https://doi.org/10.1017/pds.2022.192);
-
-Figure 2-6: Drawed by authors;
-
-Figure 7: Inspired from Dataspace Connector. Data Model. Available online: [Data Model](https://international-data-spaces-association.github.io/DataspaceConnector/Documentation/v6/DataModel);
-
-Figure 8: Inspired by the preconfiguration collection file in text form (PreparingPreconfiguredSetup.md) from IDS-testbed Repository: [IDS-testbed](https://github.com/International-Data-Spaces-Association/IDS-testbed);
-
-Figure 9-14: Drawed by authors or Screenshoted from the model and API built by authors.
- 
