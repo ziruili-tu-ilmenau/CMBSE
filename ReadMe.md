@@ -3,8 +3,9 @@ This repository provides the example SysML v2 model, which includes:
 * A simplified example model that shows the basic structure of SysML v2 
 * A concrete example model about measurement system that enables precise force measurement capabilities 
 * One necessary sub-system of measurement system as the load cell model.  
+
 The examples are used to show the collaboration between OEM and the supplier focused on the aspects of model development and model exchange. The collaboration process is based on the idea of the following CMBSE approach. 
-![Collaboration process between OEM and suppliers using SysML v2 model](https://github.com/ziruili-tu-ilmenau/CMBSE/.git/Figure 4 Collaboration process between OEM and suppliers using SysML v2 model.png)
+![Collaboration process between OEM and suppliers using SysML v2 model](.git/Figure 4 Collaboration process between OEM and suppliers using SysML v2 model.png)
 
 
 ## How to check the model
