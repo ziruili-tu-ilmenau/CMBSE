@@ -4,14 +4,15 @@ package OEMGeneralDefinition{
 	import ScalarValues::*;
     package GeneralPartDefinition{
     	import GeneralPortDefinition::*;
-        part def OverallSystem{
-            attribute maintenanceTime: Time::DateTime; 
-            port MessResultPort:MeasuringInfoPort;
-            port temperaturePort:TemperaturePort;
-            port massPort:MassPort;
-            perform action ForceMeasurement;
+        import GeneralActionDefinition::*;
+        part def def_OverallSystem{
+            attribute time: Time::DateTime; 
+            port port_MeasuringInfo:def_port_MeasuringInfo;
+            port port_Temperature:def_port_Temperature;
+            port port_Mass:def_port_Mass;
+            perform action act_ForceMeasurement:def_act_ForceMeasurement;
         }
-        part def LoadCell{
+        part def def_LoadCell{
             attribute mass :> ISQ::mass;
             attribute Tmax:>ISQ::temperature{
                 doc /*maximum working temperature  */
@@ -23,58 +24,58 @@ package OEMGeneralDefinition{
             attribute voltage:>ISQ::voltage;
             attribute maximumCapacity:>ISQ::mass;
             attribute AccuracyClass:String;
-            port InputmassPort:MassPort;
-            port InputEnergyPort:EnergyPort;
+            port port_Inputmass:def_port_Mass;
+            port port_InputEnergy:def_port_Energy;
 		}
-        part def MeasuringRing{}
-        part def EnergySystem{
-            port OutputEnergyPort:~EnergyPort;
+        part def def_MeasuringRing{}
+        part def def_EnergySystem{
+            port port_OutputEnergy:~def_port_Energy;
 	    }
     }
     package GeneralPortDefinition{
-        port def MeasuringInfoPort { 
+        port def def_port_MeasuringInfo { 
             out MessData :> ISQ::mass;
                 }
-        port def EnergyPort { 
+        port def def_port_Energy { 
             in inputVoltage :> ISQ::voltage;
                 }
-        port def TemperaturePort { 
+        port def def_port_Temperature { 
             in Roomtemperature :> ISQ::temperature;
                 }
-        port def MassPort { 
+        port def def_port_Mass { 
 		    in inputMass :> ISQ::mass;
 		}	
 	}
     package GeneralInterfaceDefinition{
     	import GeneralPortDefinition::*;
-        interface def MessDataInterface{
-            end p1:MeasuringInfoPort;
-            end p2:~MeasuringInfoPort;
+        interface def def_MessDataInterface{
+            end p1:def_port_MeasuringInfo;
+            end p2:~def_port_MeasuringInfo;
             flow p1.MessData to p2.MessData;
         }
-        interface def EnergyInterface{
-            end p1:EnergyPort;
-            end p2:~EnergyPort;
+        interface def def_EnergyInterface{
+            end p1:def_port_Energy;
+            end p2:~def_port_Energy;
             flow p2.inputVoltage to p1.inputVoltage;
         }
-        interface def TemperatureInterface{
-            end p1:TemperaturePort;
-            end p2:~TemperaturePort;
+        interface def def_TemperatureInterface{
+            end p1:def_port_Temperature;
+            end p2:~def_port_Temperature;
             flow p2.Roomtemperature to p1.Roomtemperature;
         }
     }
     package GeneralItemDefinition{
-        item def MeasuringObject;
+        item def def_MeasuringObject;
     }
     package GeneralActionDefinition{
-        action def ForceMeasurement{
+        action def def_act_ForceMeasurement{
             in voltageEnergy:>ISQ::voltage;
-            in item measuringObject: GeneralItemDefinition::MeasuringObject;
+            in item measuringObject: GeneralItemDefinition::def_MeasuringObject;
             out messresult:>ISQ::mass;    
         }
     }
     package GeneralRequirementDefinition{
-        requirement def TemperatureRequirement{
+        requirement def def_TemperatureRequirement{
             doc /* The overall system should run normally in certain temperature range.*/
             attribute maximumTemperature:>ISQ::temperature{
                 doc /*The maximum temperature in the working environment */
@@ -95,7 +96,7 @@ package OEMGeneralDefinition{
             require constraint {maximumWorkingTemperature>maximumTemperature}
             require constraint {minimumTemperature>minimumWorkingTemperature}
         }
-        requirement def MeasurementRequirement {
+        requirement def def_MeasurementRequirement {
             doc /* The overall system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
             
             attribute staticLoadRequired:>ISQ::force;
@@ -103,7 +104,7 @@ package OEMGeneralDefinition{
             attribute LoadAllowed:>ISQ::force;
             require constraint {LoadAllowed>=staticLoadRequired+dynamicLoadRequired}
             }
-        requirement def AccuracyRequirement {
+        requirement def def_AccuracyRequirement {
             doc /* The overall system should provide a certain static measurement Accuracy. */
             attribute AccuracyClass:String;
             attribute AccuracyClassActual:String;

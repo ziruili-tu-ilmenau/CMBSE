@@ -6,47 +6,47 @@ package ForceMeasurementSystem_v1_Definition{
 	package FMSPartDefinition{
 		import FMSPortDefinition::*;
 		import FMSSignalDefinition::*;
-		part def FMS:>GeneralPartDefinition::OverallSystem{
+		part def def_FMS:>GeneralPartDefinition::def_OverallSystem{
 			attribute Loadcellnumber:Real;
-			exhibit state MeasuringSystemState parallel{
-				state MeasuringState{
-					state on{
+			exhibit state st_MeasuringSystem :FMSStateDefinition::def_MeasuringSystemState parallel{
+				state st_Measuring{
+					state st_on{
 						entry action initial;
-						state standby;                    
-						state Measurement{
-							do ForceMeasurement;
+						state st_standby;                    
+						state st_Measurement{
+							do act_ForceMeasurement;
 						}
-						transition  initial then standby;
+						transition  initial then st_standby;
 						transition standby_to_Measurement
-							first standby
+							first st_standby
 							accept measureCmd
-							then Measurement;
-						transition Measurement then standby;
+							then st_Measurement;
+						transition st_Measurement then st_standby;
 					}
-					state off;
+					state st_off;
 				transition on_to_off
-					first on
+					first st_on
 					accept SystemOffSignal
-					then off;
+					then st_off;
 				transition off_to_on
-					first off
+					first st_off
 					accept SystemOnSignal
-					then on;
+					then st_on;
 					}
-               	state MaintanceState{}
+               	state st_CheckingMonitor{}
 			}
 		}
-		part def LoadCell:>GeneralPartDefinition::LoadCell{
-			port messinfoPort:MeasuringInfoPort_v1;
+		part def def_LoadCell:>GeneralPartDefinition::def_LoadCell{
+			port port_messinfo:def_port_MeasuringInfo_v1;
 			}
-		part def MeasuringRing:>GeneralPartDefinition::MeasuringRing{}
-		part def EnergySystem:>GeneralPartDefinition::EnergySystem{}
+		part def def_MeasuringRing:>GeneralPartDefinition::def_MeasuringRing{}
+		part def def_EnergySystem:>GeneralPartDefinition::def_EnergySystem{}
 	}
 	package FMSPortDefinition{
-		port def MeasuringInfoPort_v1:>GeneralPortDefinition::MeasuringInfoPort;
-		port def EnergyPort_v1:>GeneralPortDefinition::EnergyPort;
-		port def MassPort_v1:>GeneralPortDefinition::MassPort;
-		port def TemperaturePort_v1:>GeneralPortDefinition::TemperaturePort;
+		port def def_port_MeasuringInfo_v1:>GeneralPortDefinition::def_port_MeasuringInfo;
+		port def def_port_Energy_v1:>GeneralPortDefinition::def_port_Energy;
+		port def def_port_Mass_v1:>GeneralPortDefinition::def_port_Mass;
+		port def def_port_Temperature_v1:>GeneralPortDefinition::def_port_Temperature;
 		}
 	package FMSSignalDefinition{
 		attribute def SystemOffSignal;
@@ -54,31 +54,31 @@ package ForceMeasurementSystem_v1_Definition{
 		attribute def measureCmd;
 	}
 	package FMSInterfaceDefinition{
-		interface def EnergyInterface:>GeneralInterfaceDefinition::EnergyInterface;
-		interface def TemperatureInterface:>GeneralInterfaceDefinition::TemperatureInterface;
+		interface def def_EnergyInterface:>GeneralInterfaceDefinition::def_EnergyInterface;
+		interface def def_TemperatureInterface:>GeneralInterfaceDefinition::def_TemperatureInterface;
 	}
 	package FMSStateDefinition{
-		state def MeasuringSystemState;
+		state def def_MeasuringSystemState;
 	}
 	package FMSItemDefinition{
-            item def MeasuringObject{
+            item def def_MeasuringObject{
 				attribute ObjectMass:>ISQ::mass;
 			}
         }
 	package FMSActionDefinition{
-		action def provideEnergy{
+		action def def_act_provideEnergy{
 			out voltageEnergy:>ISQ::voltage;
 		}
-		action def ForceMeasurement:>GeneralActionDefinition::ForceMeasurement{
+		action def def_act_ForceMeasurement:>GeneralActionDefinition::def_act_ForceMeasurement{
 			in voltageEnergy:>ISQ::voltage;
-			in item measuringObject:FMSItemDefinition::MeasuringObject;
+			in item measuringObject:FMSItemDefinition::def_MeasuringObject;
 			out messresult:>ISQ::mass;
 		}
 	}
 	package FMSRequirementDefinition{
-		requirement def TemperatureRequirement:>GeneralRequirementDefinition::TemperatureRequirement;
-        requirement def AccuracyRequirement:>GeneralRequirementDefinition::AccuracyRequirement;
-        requirement def MeasurementRequirement:>GeneralRequirementDefinition::MeasurementRequirement; 
+		requirement def def_TemperatureRequirement:>GeneralRequirementDefinition::def_TemperatureRequirement;
+        requirement def def_AccuracyRequirement:>GeneralRequirementDefinition::def_AccuracyRequirement;
+        requirement def def_MeasurementRequirement:>GeneralRequirementDefinition::def_MeasurementRequirement; 
 	}
 
 }

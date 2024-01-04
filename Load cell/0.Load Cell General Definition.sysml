@@ -9,7 +9,7 @@ package Tier1GeneralDefinition{
 	    import 'Load Cell Action Definition'::*;
 	    import 'Load Cell State Definition'::*;
 	    import 'Load Cell Signal Definition'::*;
-		part def loadcell{
+		part def def_loadcell{
             attribute weight :> ISQ::mass;
             attribute Tmax:>ISQ::temperature{
                 doc /*maximum working temperature of load cell */
@@ -29,70 +29,70 @@ package Tier1GeneralDefinition{
             attribute maintenanceTime: Time::DateTime; 
             attribute inputvoltage:>ISQ::voltage;
             attribute AccuracyClass:String;
-            port temperaturePort:TemperaturePort;
-            port powerPort:PowerPort;
-            port massPort:MassPort;
-            port MeasuringinfoPort:MeasuringInfoPort;
-            perform action ForceMeasurement_loadcell;
-            exhibit state Loadcellstate parallel{
-                state Measurementstate{
-                    state on{
+            port port_temperature:def_port_Temperature;
+            port port_power:def_port_Power;
+            port port_mass:def_port_Mass;
+            port port_Measuringinfo:def_port_MeasuringInfo;
+            perform action act_ForceMeasurement_loadcell:def_act_ForceMeasurement_loadcell;
+            exhibit state st_Loadcell parallel{
+                state st_Measurement{
+                    state st_on{
                         entry action initial;
-                        state standby;
-                        state Measurement{
-                            do ForceMeasurement_loadcell;
+                        state st_standby;
+                        state st_Measuring{
+                            do act_ForceMeasurement_loadcell;
                         }
-                        transition  initial then standby;
+                        transition  initial then st_standby;
 						transition standby_to_Measurement
-							first standby
+							first st_standby
 							accept measureCmd
-							then Measurement;
+							then st_Measuring;
 							
-						transition Measurement then standby;
+						transition st_Measuring then st_standby;
                     }
-                    state off;
+                    state st_off;
                     transition on_to_off
-                        first on
+                        first st_on
                         accept SystemOffSignal
-                        then off;
+                        then st_off;
                     transition off_to_on
-                        first off
+                        first st_off
                         accept SystemOnSignal
-                        then on;
+                        then st_on;
                 }
-               	state MaintanceState{}
+               	state st_CheckingMonitor{}
             }
         }
-		part def StrainGauge{
+		part def def_StrainGauge{
             attribute Material:String;
         }
-		part def Body{}
+		part def def_Body{}
     }
 	package 'Load Cell Port Definition'{
-        port def TemperaturePort { 
+        port def def_port_Temperature { 
             in Roomtemperature :> ISQ::temperature;
         }
-        port def PowerPort { 
+        port def def_port_Power { 
             in inputVoltage :> ISQ::voltage;
         }
-        port def MassPort {
-            in item measuringObject:'Load Cell Item Definition'::MeasuringObject;
+        port def def_port_Mass {
+            in item measuringObject:'Load Cell Item Definition'::def_MeasuringObject;
         }
-        port def MeasuringInfoPort { 
+        port def def_port_MeasuringInfo { 
             millivolt :> scalarQuantities = ISQ::voltage*1000;
             out MessData :> millivolt;
         }
     }	
     package 'Load Cell Item Definition'{
-        item def MeasuringObject;
+        item def def_MeasuringObject;
     }
     package 'Load Cell State Definition'{
-        state def Loadcellstate;
+        state def def_Loadcellstate;
     }
     package 'Load Cell Action Definition'{
-        action def ForceMeasurement_loadcell{
+        action def def_act_ForceMeasurement_loadcell{
 			in voltageEnergy:>ISQ::voltage;
-            in item measuringObject:'Load Cell Item Definition'::MeasuringObject;
+            in item measuringObject:'Load Cell Item Definition'::def_MeasuringObject;
 			out messresult:>ISQ::mass;
         }
     }
@@ -102,7 +102,7 @@ package Tier1GeneralDefinition{
 		attribute def measureCmd;
     }
 	package 'Requirement Definition'{
-        requirement def Temperature{
+        requirement def def_TemperatureRequirement{
             	doc /* The load cell should run normally in certain temperature range.*/
 		        attribute maximumTemperature:>ISQ::temperature{
 		        	doc /*The maximum temperature in the working environment */
@@ -125,14 +125,14 @@ package Tier1GeneralDefinition{
 		        require constraint {minimumTemperature>minimumWorkingTemperature}
 		        
         	}
-    	requirement def AccuracyRequirement {
+    	requirement def def_AccuracyRequirement {
                 doc /* The load cell should provide a certain static measurement Accuracy. */
                 attribute AccuracyClass:String;
                 attribute AccuracyClassActual:String;
                 require constraint {AccuracyClass==AccuracyClassActual}
                 }
         	
-        requirement def MeasurementRequirement {
+        requirement def def_MeasurementRequirement {
             doc /* The load cell should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
             
             attribute staticLoadRequired:>ISQ::mass;

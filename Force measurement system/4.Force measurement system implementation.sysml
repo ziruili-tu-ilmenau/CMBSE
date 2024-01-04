@@ -10,44 +10,46 @@ package SystemImplemetation{
         import ForceMeasurementSystemActionDefinition::*;
         import ForceMeasurementSystemInterfaceDefinition::*;
         package ForceMeasurementSystemPartDefinition{
-            part def ForceMeasurementSystem{
+            part def def_ForceMeasurementSystem{
                 attribute Loadcellnumber:Real;
-                attribute maintenanceTime: Time::DateTime; 
-                port MessResultPort:MeasuringInfoPort;
-                port temperaturePort:TemperaturePort;
-                perform action ForceMeasurement;
+                attribute time: Time::DateTime; 
+                port port_MessResult:def_port_MeasuringInfo;
+                port port_temperature:def_port_Temperature;
+                perform action act_ForceMeasurement;
                 exhibit state MeasuringSystemState parallel{
                     
                     state MeasuringState{
-                        state on{
+                        state st_on{
                             entry action initial;
-                            state standby;                    
-                            state Measurement{
-                                do ForceMeasurement;
+                            state st_standby;                    
+                            state st_Measurement{
+                                do act_ForceMeasurement;
                             }
-                            transition  initial then standby;
+                            transition  initial then st_standby;
                             transition standby_to_Measurement
-                                first standby
+                                first st_standby
                                 accept measureCmd
-                                then Measurement;
+                                then st_Measurement;
                                 
-                            transition Measurement then standby;
+                            transition st_Measurement then st_standby;
                         }
                     
-                        state off;
+                        state st_off;
                     transition on_to_off
-                        first on
+                        first st_on
                         accept SystemOffSignal
-                        then off;
+                        then st_off;
                     transition off_to_on
-                        first off
+                        first st_off
                         accept SystemOnSignal
-                        then on;
+                        then st_on;
                         }
-                    state MaintanceState{}
+                    state st_CheckingMonitor{
+                        doc /*check if the system is normal or needs maintenance */
+                    }
                 }
             }
-            part def LoadCell{
+            part def def_LoadCell{
                 attribute mass :> ISQ::mass;
                 attribute Tmax:>ISQ::temperature{
                     doc /*maximum working temperature of load cell */
@@ -68,65 +70,66 @@ package SystemImplemetation{
                 attribute maintenanceTime: Time::DateTime; 
                 attribute inputvoltage:>ISQ::voltage;
                 attribute AccuracyClass:String;
-                port temperaturePort:TemperaturePort;
-                port powerPort:EnergyPort;
-                port massPort:MassPort;
-                port MeasuringinfoPort:MeasuringInfoPort;
-                perform action ForceMeasurement_loadcell;
+                port port_temperature:def_port_Temperature;
+                port port_energy:def_port_Energy;
+                port port_mass:def_port_Mass;
+                port port_Measuringinfo:def_port_MeasuringInfo;
+                perform action act_ForceMeasurement_loadcell;
                 exhibit state Loadcellstate parallel{
-                    state Measurementstate{
-                        state on{
+                    state MeasurementState{
+                        state st_on{
                             entry action initial;
-                            state standby;
-                            state Measurement{
-                                do ForceMeasurement_loadcell;
+                            state st_standby;
+                            state st_Measurement{
+                                do act_ForceMeasurement_loadcell;
                             }
-                            transition  initial then standby;
+                            transition  initial then st_standby;
                             transition standby_to_Measurement
-                                first standby
+                                first st_standby
                                 accept measureCmd_loadcell
-                                then Measurement;
+                                then st_Measurement;
                                 
-                            transition Measurement then standby;
+                            transition st_Measurement then st_standby;
                         }
-                        state off;
+                        state st_off;
                         transition on_to_off
-                            first on
+                            first st_on
                             accept OffSignal
-                            then off;
+                            then st_off;
                         transition off_to_on
-                            first off
+                            first st_off
                             accept OnSignal
-                            then on;
+                            then st_on;
                     }
-                    state MaintanceState{}
+                    state st_CheckingMonitor{
+                        doc /*check if the system is normal or needs maintenance */
+                    }
                 }
             }
-            part def StrainGauge{
+            part def def_StrainGauge{
                 attribute Material:String;
             }
-            part def Body{}
-            part def MeasuringRing{}
-            part def EnergySystem{
-                perform action provideEnergy;
-                port OutputEnergyPort:~EnergyPort;
+            part def def_Body{}
+            part def def_MeasuringRing{}
+            part def def_EnergySystem{
+                perform action act_provideEnergy;
+                port port_OutputEnergy:~def_port_Energy;
             }
 
         }
         package ForceMeasurementSystemPortDefinition{
-            port def MeasuringInfoPort { 
+            port def def_port_MeasuringInfo { 
                 out MessData :> ISQ::mass;
                 millivolt :> scalarQuantities = ISQ::voltage*1000;
                     }
-            port def EnergyPort { 
+            port def def_port_Energy { 
                 in inputVoltage :> ISQ::voltage;
                     }
-                    
-            port def TemperaturePort { 
+            port def def_port_Temperature { 
                 in Roomtemperature :> ISQ::temperature;
                     }
-            port def MassPort {
-                in item Meausringobject:ItemDefinition::MeausringObject;
+            port def def_port_Mass {
+                in item Meausringobject:ItemDefinition::def_MeausringObject;
             }
             }
         package ForceMeasurementSystemSignalDefinition{
@@ -138,45 +141,47 @@ package SystemImplemetation{
             attribute def measureCmd_loadcell;
         }
         package ForceMeasurementSystemInterfaceDefinition{
-            interface def EnergyInterface{
-                end p1:EnergyPort;
-                end p2:~EnergyPort;
+            interface def def_EnergyInterface{
+                end p1:def_port_Energy;
+                end p2:~def_port_Energy;
                 flow p2.inputVoltage to p1.inputVoltage;
             }
-            interface def MessDataInterface{
-                end p1:MeasuringInfoPort;
-                end p2:~MeasuringInfoPort;
+            interface def def_MessDataInterface{
+                end p1:def_port_MeasuringInfo;
+                end p2:~def_port_MeasuringInfo;
                 flow p1.MessData to p2.MessData;
             }
-            interface def TemperatureInterface{
-                end p1:TemperaturePort;
-                end p2:~TemperaturePort;
+            interface def def_TemperatureInterface{
+                end p1:def_port_Temperature;
+                end p2:~def_port_Temperature;
                 flow p2.Roomtemperature to p1.Roomtemperature;
             }
         }
         package ForceMeasurementSystemStateDefinition{
-            state def MeasuringSystemState;
-            state def Loadcellstate;
+            state def def_MeasuringSystemState;
+            state def def_Loadcellstate;
         }
         package ForceMeasurementSystemActionDefinition{
-            action def provideEnergy{
+            action def def_act_provideEnergy{
                 out voltageEnergy:>ISQ::voltage;
             }
-            action def ForceMeasurement{
+            action def def_act_ForceMeasurement{
                 in voltageEnergy:>ISQ::voltage;
                 out messresult:ISQ::MassValue;
             }
-            action def ForceMeasurement_loadcell{
+            action def def_act_ForceMeasurement_loadcell{
                 in voltageEnergy:>ISQ::voltage;
-                in item Meausringobject:ItemDefinition::MeausringObject;
+                in item Meausringobject:ItemDefinition::def_MeausringObject;
                 out messresult:ISQ::MassValue;
             }
         }
         package ItemDefinition{
-            item def MeausringObject;
+            item def def_MeausringObject{
+                attribute ObjectMass:>ISQ::mass;
+            }
        	}
         package ForceMeasurementSystemRequirementDefinition{
-            requirement def TemperatureRequirement{
+            requirement def def_TemperatureRequirement{
                 doc /* The overall system should run normally in certain temperature range.*/
                 attribute maximumTemperature:>ISQ::temperature{
                     doc /*The maximum temperature in the working environment */
@@ -197,7 +202,7 @@ package SystemImplemetation{
                 require constraint {maximumWorkingTemperature>maximumTemperature}
                 require constraint {minimumTemperature>minimumWorkingTemperature}
             }
-            requirement def MeasurementRequirement {
+            requirement def def_MeasurementRequirement {
                 doc /* The overall system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
                 
                 attribute staticLoadRequired:>ISQ::force;
@@ -205,7 +210,7 @@ package SystemImplemetation{
                 attribute LoadAllowed:>ISQ::force;
                 require constraint {LoadAllowed>=staticLoadRequired+dynamicLoadRequired}
             }
-            requirement def AccuracyRequirement {
+            requirement def def_AccuracyRequirement {
                 doc /* The overall system should provide a certain static measurement Accuracy. */
                 attribute AccuracyClass:String;
                 attribute AccuracyClassActual:String;
@@ -216,40 +221,39 @@ package SystemImplemetation{
     package SystemImplemetationModel{
         import ForceMeasurementSystemDefinition::*;
         package PartsTree{
-            part Forcemeasurementsystem_v1 : ForceMeasurementSystem{
+            part Forcemeasurementsystem_v1 : def_ForceMeasurementSystem{
                 
-                attribute num redefines ForceMeasurementSystemPartDefinition::ForceMeasurementSystem::Loadcellnumber=3;
-                attribute  redefines ForceMeasurementSystem::maintenanceTime=3600[h]; 
-                perform ActionTree::ForceMeasurement redefines ForceMeasurement;
+                attribute num redefines ForceMeasurementSystemPartDefinition::def_ForceMeasurementSystem::Loadcellnumber=3;
+                perform ActionTree::act_ForceMeasurement redefines act_ForceMeasurement;
                 exhibit state MeasuringSystemState redefines MeasuringSystemState;
                     
-                part loadcell_v1:LoadCell{
-                    attribute loadcellMass redefines LoadCell::mass=2[kg];
-                    attribute loadcellTmax redefines LoadCell::Tmax=60['°C'];
-                    attribute loadcellTmin redefines LoadCell::Tmin=-10['°C'];
-                    attribute loadcellTamax redefines LoadCell::Tamax=65['°C'];
-                    attribute loadcellTamin redefines LoadCell::Tamin=-15['°C'];
-                    attribute  redefines LoadCell::maintenanceTime=4000[h]; 
-                    attribute  redefines LoadCell::inputvoltage=12[V];
-                    attribute  loadcellCapacity redefines LoadCell::maximumCapacity=40[kg];
-                    attribute loadcelLimitedLateralLoad redefines LoadCell::limitedLateralLoad=120[N];
-                    attribute loadcellAccuracyClass redefines LoadCell::AccuracyClass="C3";	
+                part loadcell_v1:def_LoadCell{
+                    attribute loadcellMass redefines def_LoadCell::mass=2[kg];
+                    attribute loadcellTmax redefines def_LoadCell::Tmax=60['°C'];
+                    attribute loadcellTmin redefines def_LoadCell::Tmin=-10['°C'];
+                    attribute loadcellTamax redefines def_LoadCell::Tamax=65['°C'];
+                    attribute loadcellTamin redefines def_LoadCell::Tamin=-15['°C'];
+                    attribute  redefines def_LoadCell::maintenanceTime=4000[h]; 
+                    attribute  redefines def_LoadCell::inputvoltage=12[V];
+                    attribute  loadcellCapacity redefines def_LoadCell::maximumCapacity=40[kg];
+                    attribute loadcelLimitedLateralLoad redefines def_LoadCell::limitedLateralLoad=120[N];
+                    attribute loadcellAccuracyClass redefines def_LoadCell::AccuracyClass="C3";	
                     
                     }
-                part Measuringring:MeasuringRing;
-                part Energysystem:EnergySystem{
-                    perform ActionTree::provideEnergy redefines provideEnergy;
+                part Measuringring:def_MeasuringRing;
+                part Energysystem:def_EnergySystem{
+                    perform ActionTree::act_provideEnergy redefines act_provideEnergy;
                     
                 }
-                interface energyInterface_v1:EnergyInterface
-                    connect Energysystem.OutputEnergyPort to loadcell_v1.powerPort;
-                interface TemperatureInterface_v1:TemperatureInterface
-                    connect Forcemeasurementsystem_v1.temperaturePort to loadcell_v1.temperaturePort;
-
-                bind loadcell_v1.MeasuringinfoPort = Forcemeasurementsystem_v1.MessResultPort;
+                interface energyInterface_v1:def_EnergyInterface
+                    connect Energysystem.port_OutputEnergy to loadcell_v1.port_energy;
+                interface TemperatureInterface_v1:def_TemperatureInterface
+                    connect Forcemeasurementsystem_v1.port_temperature to loadcell_v1.port_temperature;
+                interface MessDataInterface:def_MessDataInterface
+                    connect loadcell_v1.port_Measuringinfo to Forcemeasurementsystem_v1.port_MessResult;
 
                 satisfy requirements::temperatureRequirement by Forcemeasurementsystem_v1{
-                        attribute redefines temperatureActual = Forcemeasurementsystem_v1.temperaturePort.Roomtemperature;
+                        attribute redefines temperatureActual = Forcemeasurementsystem_v1.port_temperature.Roomtemperature;
                         attribute redefines maximumWorkingTemperature = Forcemeasurementsystem_v1.loadcell_v1.loadcellTmax;
                         attribute redefines minimumWorkingTemperature = Forcemeasurementsystem_v1.loadcell_v1.loadcellTmin;
                     
@@ -264,15 +268,15 @@ package SystemImplemetation{
             }
         }
         package ActionTree{
-            action ForceMeasurement:ForceMeasurementSystemActionDefinition::ForceMeasurement{
+            action act_ForceMeasurement:ForceMeasurementSystemActionDefinition::def_act_ForceMeasurement{
                 in :>>voltageEnergy;
                 out :>>messresult;
             }
-            action ForceMeasurement_loadcell:ForceMeasurementSystemActionDefinition::ForceMeasurement_loadcell;
-            action provideEnergy:ForceMeasurementSystemActionDefinition::provideEnergy;
+            action act_ForceMeasurement_loadcell:ForceMeasurementSystemActionDefinition::def_act_ForceMeasurement_loadcell;
+            action act_provideEnergy:ForceMeasurementSystemActionDefinition::def_act_provideEnergy;
         }
         package requirements{
-            requirement temperatureRequirement:ForceMeasurementSystemRequirementDefinition::TemperatureRequirement{
+            requirement temperatureRequirement:ForceMeasurementSystemRequirementDefinition::def_TemperatureRequirement{
             
             	doc /* The measuring system should run normally in certain temperature range.*/
 		        attribute redefines maximumTemperature =60['°C'];
@@ -286,13 +290,13 @@ package SystemImplemetation{
 		        require constraint {maximumWorkingTemperature>maximumTemperature}
 		        require constraint {minimumTemperature>minimumWorkingTemperature}
         	}
-            requirement  accuracyRequirement:ForceMeasurementSystemRequirementDefinition::AccuracyRequirement{
+            requirement  accuracyRequirement:ForceMeasurementSystemRequirementDefinition::def_AccuracyRequirement{
                 doc /* The load cell should provide a certain static measurement Accuracy. */
                 attribute redefines AccuracyClass="C3";
                 attribute redefines AccuracyClassActual:String;
                 require constraint {AccuracyClass==AccuracyClassActual}
             }
-            requirement measurementRequirement:ForceMeasurementSystemRequirementDefinition::MeasurementRequirement {
+            requirement measurementRequirement:ForceMeasurementSystemRequirementDefinition::def_MeasurementRequirement {
                 doc /* The measuring system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
                 
                 attribute redefines staticLoadRequired =35[kg] ;

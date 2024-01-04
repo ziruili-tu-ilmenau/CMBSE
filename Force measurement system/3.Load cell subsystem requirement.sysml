@@ -9,67 +9,66 @@ package LoadCellSubsystemRequirement{
 		import PortDefinition::*;
 	
         package Partdefinition{
-            part def OverallSystem:> OEMGeneralDefinition::GeneralPartDefinition::OverallSystem{
+            part def def_OverallSystem:> OEMGeneralDefinition::GeneralPartDefinition::def_OverallSystem{
                 attribute Loadcellnumber:Real;
             }
-            part def LoadCell:> OEMGeneralDefinition::GeneralPartDefinition::LoadCell{}
-            part def MeasuringRing:>OEMGeneralDefinition::GeneralPartDefinition::MeasuringRing{}
-            part def EnergySystem:>OEMGeneralDefinition::GeneralPartDefinition::EnergySystem;
+            part def def_LoadCell:> OEMGeneralDefinition::GeneralPartDefinition::def_LoadCell{}
+            part def def_MeasuringRing:>OEMGeneralDefinition::GeneralPartDefinition::def_MeasuringRing{}
+            part def def_EnergySystem:>OEMGeneralDefinition::GeneralPartDefinition::def_EnergySystem;
         }
         package PortDefinition{
-            port def MeasuringInfoPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::MeasuringInfoPort;
-            port def EnergyPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::EnergyPort ;
-            port def TemperaturePort_v1:> OEMGeneralDefinition::GeneralPortDefinition::TemperaturePort;
-            port def MassPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::MassPort;
+            port def def_MeasuringInfoPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::def_port_MeasuringInfo;
+            port def def_EnergyPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::def_port_Energy ;
+            port def def_TemperaturePort_v1:> OEMGeneralDefinition::GeneralPortDefinition::def_port_Temperature;
+            port def def_MassPort_v1:> OEMGeneralDefinition::GeneralPortDefinition::def_port_Mass;
 		}
         package InterfaceDefinition{
-            interface def MessDataInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::MessDataInterface;
-            interface def EnergyInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::EnergyInterface;
-            interface def TemperatureInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::TemperatureInterface;
+            interface def def_MessDataInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::def_MessDataInterface;
+            interface def def_EnergyInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::def_EnergyInterface;
+            interface def def_TemperatureInterface:> OEMGeneralDefinition::GeneralInterfaceDefinition::def_TemperatureInterface;
 	    }
         package ActionDefinition{
-            action def ForceMeasurement:> OEMGeneralDefinition::GeneralActionDefinition::ForceMeasurement;
+            action def def_act_ForceMeasurement:> OEMGeneralDefinition::GeneralActionDefinition::def_act_ForceMeasurement;
             
         }
         package ItemDefinition{
-            item def MeasuringObject{
+            item def def_MeasuringObject{
 				attribute ObjectMass:>ISQ::mass;
 			}
         }
         package RequirementDefinition{
-            requirement def Temperature:> OEMGeneralDefinition::GeneralRequirementDefinition::TemperatureRequirement;
-            requirement def AccuracyRequirement:> OEMGeneralDefinition::GeneralRequirementDefinition::AccuracyRequirement;
-            requirement def MeasurementRequirement:> OEMGeneralDefinition::GeneralRequirementDefinition::MeasurementRequirement;
+            requirement def def_TemperatureRequirement:> OEMGeneralDefinition::GeneralRequirementDefinition::def_TemperatureRequirement;
+            requirement def def_AccuracyRequirement:> OEMGeneralDefinition::GeneralRequirementDefinition::def_AccuracyRequirement;
+            requirement def def_MeasurementRequirement:> OEMGeneralDefinition::GeneralRequirementDefinition::def_MeasurementRequirement;
         }
     }
     package OverallSystemModel{
         import OverallsystemDefinition::*;
         package PartsTree{
-            part OverallSystem_v1 : Partdefinition::OverallSystem{
-                attribute num redefines Partdefinition::OverallSystem::Loadcellnumber=3;
-                attribute  redefines Partdefinition::OverallSystem::maintenanceTime=3600[h]; 
-                perform ActionTree::ForceMeasurement redefines ForceMeasurement;
-                part loadcell:Partdefinition::LoadCell{
-                    attribute loadcellTmax redefines Partdefinition::LoadCell::Tmax;
-                    attribute loadcellTmin redefines Partdefinition::LoadCell::Tmin;
-                    attribute  redefines Partdefinition::LoadCell::maintenanceTime; 
-                    attribute  redefines Partdefinition::LoadCell::voltage=12[V];
-                    attribute  loadcellCapacity redefines Partdefinition::LoadCell::maximumCapacity;
-                    attribute loadcellAccuracyClass redefines Partdefinition::LoadCell::AccuracyClass;
-		        port messinfoPort:MeasuringInfoPort_v1;
-                port temperature_lc_Port:TemperaturePort_v1;
+            part OverallSystem_v1 : Partdefinition::def_OverallSystem{
+                attribute num redefines Partdefinition::def_OverallSystem::Loadcellnumber=3;
+                attribute Time redefines Partdefinition::def_OverallSystem::time; 
+                part loadcell:Partdefinition::def_LoadCell{
+                    attribute loadcellTmax redefines Partdefinition::def_LoadCell::Tmax;
+                    attribute loadcellTmin redefines Partdefinition::def_LoadCell::Tmin;
+                    attribute loadcellmaintenanceTime redefines Partdefinition::def_LoadCell::maintenanceTime; 
+                    attribute loadcellvoltage redefines Partdefinition::def_LoadCell::voltage=12[V];
+                    attribute loadcellCapacity redefines Partdefinition::def_LoadCell::maximumCapacity;
+                    attribute loadcellAccuracyClass redefines Partdefinition::def_LoadCell::AccuracyClass;
+                    port port_messinfo:def_MeasuringInfoPort_v1;
+                    port port_temperature_lc:def_TemperaturePort_v1;
                     }
-                part MeasuringRing:Partdefinition::MeasuringRing;
-                part EnergySystem:Partdefinition::EnergySystem{
-                    port outputenergyPort:~EnergyPort_v1;
+                part MeasuringRing:Partdefinition::def_MeasuringRing;
+                part EnergySystem:Partdefinition::def_EnergySystem{
+                    port port_outputenergy:~def_EnergyPort_v1;
                 }
-                interface energyInterface:InterfaceDefinition::EnergyInterface
-                    connect EnergySystem.outputenergyPort to loadcell.InputEnergyPort;
-                bind loadcell.messinfoPort = OverallSystem_v1.MessResultPort;
-                bind loadcell.temperature_lc_Port= OverallSystem_v1.temperaturePort;
+                interface energyInterface:InterfaceDefinition::def_EnergyInterface
+                    connect EnergySystem.port_outputenergy to loadcell.port_InputEnergy;
+                bind loadcell.port_messinfo = OverallSystem_v1.port_MeasuringInfo;
+                bind loadcell.port_temperature_lc= OverallSystem_v1.port_Temperature;
                 satisfy requirements::TemperatureRequirement by OverallSystem_v1{
                     requirement TemperatureRequirement :>>requirements::TemperatureRequirement{
-                        attribute redefines temperatureActual = OverallSystem_v1.temperaturePort.Roomtemperature;
+                        attribute redefines temperatureActual = OverallSystem_v1.port_Temperature.Roomtemperature;
                         attribute redefines maximumWorkingTemperature = OverallSystem_v1.loadcell.loadcellTmax;
                         attribute redefines minimumWorkingTemperature = OverallSystem_v1.loadcell.loadcellTmin;
                         }
@@ -87,17 +86,17 @@ package LoadCellSubsystemRequirement{
             }
         }
         package ActionTree{
-            action ForceMeasurement:ActionDefinition::ForceMeasurement{
+            action act_ForceMeasurement:ActionDefinition::def_act_ForceMeasurement{
             }
         }
         package requirements {
 		
-            requirement TemperatureRequirement: RequirementDefinition::Temperature{
+            requirement TemperatureRequirement: RequirementDefinition::def_TemperatureRequirement{
                     doc /* The load cell should run normally in certain temperature range.*/
                     attribute redefines maximumTemperature = 60['°C'];
                     attribute redefines minimumTemperature =-10['°C'];
                 }
-            requirement MeasurementRequirement: RequirementDefinition::MeasurementRequirement {
+            requirement MeasurementRequirement: RequirementDefinition::def_MeasurementRequirement {
                 doc /* The load cell should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
                 
                 attribute redefines staticLoadRequired =350[N] ;
@@ -105,7 +104,7 @@ package LoadCellSubsystemRequirement{
                 attribute loadallowed redefines LoadAllowed;
                 require constraint {loadallowed>=staticLoadRequired+dynamicLoadRequired}
                 }
-            requirement AccuracyRequirement:RequirementDefinition::AccuracyRequirement {
+            requirement AccuracyRequirement:RequirementDefinition::def_AccuracyRequirement {
                 doc /* The measuring system should provide a certain static measurement Accuracy. */
                 attribute redefines AccuracyClass="C3";
                 

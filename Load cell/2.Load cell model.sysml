@@ -1,7 +1,7 @@
 package LoadCellModel{
     import LoadCellDefinition::*;
     package PartsTree{
-        part LoadCell_v1 : LoadCellDefinition::'Load Cell Part Definition'::loadcell{
+        part LoadCell_v1 : LoadCellDefinition::'Load Cell Part Definition'::def_loadcell{
             attribute :>>weight =2[kg];
             
             attribute :>>Tmax=60['°C'];
@@ -20,15 +20,15 @@ package LoadCellModel{
             
             attribute :>>AccuracyClass="C3";		 	
 	     	
-	 		part StrainGauge_v1: LoadCellDefinition::'Load Cell Part Definition'::StrainGauge{
+	 		part StrainGauge_v1: LoadCellDefinition::'Load Cell Part Definition'::def_StrainGauge{
 	 			attribute :>>Material="Aluminium";
 	 		}
-            perform ActionTree::ForceMeasurement_loadcell redefines ForceMeasurement_loadcell;
-            port measuringInfoPort: MeasuringInfoPort ;
+            perform ActionTree::act_ForceMeasurement_loadcell redefines act_ForceMeasurement_loadcell;
+            port port_MeasuringInfo: def_port_MeasuringInfo ;
             satisfy requirements::TemperatureRequirement by LoadCell_v1{
                 attribute redefines maximumWorkingTemperature = LoadCell_v1.Tmax;
                 attribute redefines minimumWorkingTemperature = LoadCell_v1.Tmin;
-                attribute redefines temperatureActual=LoadCell_v1.temperaturePort.Roomtemperature;
+                attribute redefines temperatureActual=LoadCell_v1.port_temperature.Roomtemperature;
             }
             satisfy requirements::MeasurementRequirement by LoadCell_v1{
                 attribute redefines  staticLoadAllowed = LoadCell_v1.maximumCapacity;
@@ -41,15 +41,15 @@ package LoadCellModel{
     }
     }
     package ActionTree{
-        action ForceMeasurement_loadcell:'Load Cell Action Definition'::ForceMeasurement_loadcell{
-            action ResultConvert:'Load Cell Action Definition'::ResultConvert;
-            action ForceToVoltage:'Load Cell Action Definition'::ForceToVoltage;
-            flow ForceToVoltage.MessData to ResultConvert.MessData;
-            flow ResultConvert.messresult to ForceMeasurement_loadcell.messresult;
+        action act_ForceMeasurement_loadcell:'Load Cell Action Definition'::def_act_ForceMeasurement_loadcell{
+            action act_ResultConvert:'Load Cell Action Definition'::def_act_ResultConvert;
+            action act_ForceToVoltage:'Load Cell Action Definition'::def_act_ForceToVoltage;
+            flow act_ForceToVoltage.MessData to act_ResultConvert.MessData;
+            flow act_ResultConvert.messresult to act_ForceMeasurement_loadcell.messresult;
         }
     }
     package requirements{
-        requirement TemperatureRequirement: 'Requirement Definition'::Temperature{
+        requirement TemperatureRequirement: 'Requirement Definition'::def_TemperatureRequirement{
             
             	doc /* The measuring system should run normally in certain temperature range.*/
 		        attribute redefines maximumTemperature =60['°C'];
@@ -64,7 +64,7 @@ package LoadCellModel{
         	}
         	
         	
-        requirement MeasurementRequirement: 'Requirement Definition'::MeasurementRequirement {
+        requirement MeasurementRequirement: 'Requirement Definition'::def_MeasurementRequirement {
             doc /* The measuring system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
             
             attribute redefines staticLoadRequired =35[kg] ;
@@ -73,7 +73,7 @@ package LoadCellModel{
             require constraint {staticLoadAllowed>=staticLoadRequired+dynamicLoadRequired}
 		   
         	}
-        requirement  AccuracyRequirement:'Requirement Definition'::AccuracyRequirement{
+        requirement  AccuracyRequirement:'Requirement Definition'::def_AccuracyRequirement{
             doc /* The load cell should provide a certain static measurement Accuracy. */
                 attribute redefines AccuracyClass="C3";
                 require constraint {AccuracyClass==AccuracyClassActual}
