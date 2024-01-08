@@ -19,28 +19,28 @@ package SystemImplemetation{
                 exhibit state MeasuringSystemState parallel{
                     
                     state MeasuringState{
-                        state st_on{
+                        state st_On{
                             entry action initial;
-                            state st_standby;                    
+                            state st_Standby;                    
                             state st_Measurement{
                                 do act_ForceMeasurement;
                             }
-                            transition  initial then st_standby;
+                            transition  initial then st_Standby;
                             transition standby_to_Measurement
-                                first st_standby
+                                first st_Standby
                                 accept measureCmd
                                 then st_Measurement;
                                 
-                            transition st_Measurement then st_standby;
+                            transition st_Measurement then st_Standby;
                         }
                     
-                        state st_off;
+                        state st_Off;
                     transition on_to_off
-                        first st_on
+                        first st_On
                         accept SystemOffSignal
-                        then st_off;
+                        then st_Off;
                     transition off_to_on
-                        first st_off
+                        first st_Off
                         accept SystemOnSignal
                         then st_on;
                         }
@@ -77,29 +77,29 @@ package SystemImplemetation{
                 perform action act_ForceMeasurement_loadcell;
                 exhibit state Loadcellstate parallel{
                     state MeasurementState{
-                        state st_on{
+                        state st_On{
                             entry action initial;
-                            state st_standby;
+                            state st_Standby;
                             state st_Measurement{
                                 do act_ForceMeasurement_loadcell;
                             }
-                            transition  initial then st_standby;
+                            transition  initial then st_Standby;
                             transition standby_to_Measurement
-                                first st_standby
+                                first st_Standby
                                 accept measureCmd_loadcell
                                 then st_Measurement;
                                 
-                            transition st_Measurement then st_standby;
+                            transition st_Measurement then st_Standby;
                         }
-                        state st_off;
+                        state st_Off;
                         transition on_to_off
-                            first st_on
+                            first st_On
                             accept OffSignal
-                            then st_off;
+                            then st_Off;
                         transition off_to_on
-                            first st_off
+                            first st_Off
                             accept OnSignal
-                            then st_on;
+                            then st_On;
                     }
                     state st_CheckingMonitor{
                         doc /*check if the system is normal or needs maintenance */

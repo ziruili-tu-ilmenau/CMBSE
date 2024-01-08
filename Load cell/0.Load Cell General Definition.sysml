@@ -36,29 +36,29 @@ package Tier1GeneralDefinition{
             perform action act_ForceMeasurement_loadcell:def_act_ForceMeasurement_loadcell;
             exhibit state st_Loadcell parallel{
                 state st_Measurement{
-                    state st_on{
+                    state st_On{
                         entry action initial;
-                        state st_standby;
+                        state st_Standby;
                         state st_Measuring{
                             do act_ForceMeasurement_loadcell;
                         }
-                        transition  initial then st_standby;
+                        transition  initial then st_Standby;
 						transition standby_to_Measurement
-							first st_standby
+							first st_Standby
 							accept measureCmd
 							then st_Measuring;
 							
-						transition st_Measuring then st_standby;
+						transition st_Measuring then st_Standby;
                     }
-                    state st_off;
+                    state st_Off;
                     transition on_to_off
-                        first st_on
+                        first st_On
                         accept SystemOffSignal
-                        then st_off;
+                        then st_Off;
                     transition off_to_on
-                        first st_off
+                        first st_Off
                         accept SystemOnSignal
-                        then st_on;
+                        then st_On;
                 }
                	state st_CheckingMonitor{}
             }
