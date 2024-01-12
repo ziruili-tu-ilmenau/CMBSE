@@ -10,8 +10,8 @@ The examples are used to show the collaboration between OEM and the supplier foc
 
 ## How to check the model
 To import and check the model, the relevant installer for eclipse plugins (KerML and SysML Editors & PlantUML visualization) or Jupyter kernel (SysML language kernel) is required. 
-The further installation guides can be found in the **SysML-v2-Release repository** (Link:[SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master)), in the _install_ dictionary.
+The further installation guides can be found in the **SysML-v2-Release repository** (Link: [SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master)), in the _install_ dictionary.
 > To visulize the textual notations of the model in the eclipse, model project **sysml.library** in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(Path: install/eclipse/README.adoc)_. 
 
 ## Related Work
-The model shows the implementation of SysML v2 model and Dataspaces in the published paper **Collaborative Model-Based Systems Engineering Using Dataspaces and SysML v2** [Doi](https://doi.org/10.3390/systems12010018) as the contribution from [Product and Systems Engineering Group](https://www.tu-ilmenau.de/en/university/departments/department-of-mechanical-engineering/profile/institutes-and-groups/engineering-design-group), Department of Mechanical Engineering, Technische Universität Ilmenau.
+The model shows the implementation of SysML v2 model and Dataspaces in the published paper **Collaborative Model-Based Systems Engineering Using Dataspaces and SysML v2** (Link: [Doi](https://doi.org/10.3390/systems12010018)) as the contribution from Product and Systems Engineering Group, Department of Mechanical Engineering, Technische Universität Ilmenau ([Link](https://www.tu-ilmenau.de/en/university/departments/department-of-mechanical-engineering/profile/institutes-and-groups/engineering-design-group)).
