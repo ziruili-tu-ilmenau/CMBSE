@@ -42,7 +42,11 @@ package SystemImplemetation{
                     transition off_to_on
                         first st_Off
                         accept SystemOnSignal
+<<<<<<< Updated upstream
                         then st_on;
+=======
+                        then st_On;
+>>>>>>> Stashed changes
                         }
                     state st_CheckingMonitor{
                         doc /*check if the system is normal or needs maintenance */
