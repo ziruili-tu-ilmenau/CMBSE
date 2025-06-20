@@ -10,16 +10,22 @@ The examples are used to show the collaboration between OEM and the supplier foc
 
 ## How to check the model
 To import and check the model, the relevant installer for eclipse plugins (KerML and SysML Editors & PlantUML visualization) or Jupyter kernel (SysML language kernel) is required. 
-<<<<<<< Updated upstream
-The further installation guides can be found in the **SysML-v2-Release repository** [[Link](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master)], in the _install_ dictionary.
-> To visulize the textual notations of the model in the eclipse, model project **sysml.library** in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(Path: install/eclipse/README.adoc)_. 
-
-## Related Work
-The model shows the implementation of the SysML-v2 model and Dataspaces in the published paper **Collaborative Model-Based Systems Engineering Using Dataspaces and SysML v2** [[Link](https://doi.org/10.3390/systems12010018)] as the contribution from Product and Systems Engineering Group, Department of Mechanical Engineering, Technische Universität Ilmenau [[Link](https://www.tu-ilmenau.de/en/university/departments/department-of-mechanical-engineering/profile/institutes-and-groups/engineering-design-group)].
-=======
 The further installation guides can be found in the **SysML-v2-Release repository** (Link:[SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release/tree/master)), in the _install_ dictionary.
 > To visulize the textual notations of the model in the eclipse, model project **sysml.library** in the **SysML-v2-Release repository** must be installed and built with following the installation guides _(Path: install/eclipse/README.adoc)_. 
 
+## Prompt-Driven Model Alignment
+To support semantic consistency and model integration in collaborative MBSE scenarios, we introduce a **structured prompt-driven alignment pipeline**, designed to work with SysML v2 textual models and GPT-based large language models (LLMs). This process builds upon the methods described in our research and emphasizes traceable, semantically grounded mapping between independently developed system models (OEM ↔ Supplier).
+
+The alignment prompt enables:
+
+- Extraction of model structure and semantics in structured JSON  
+- Iterative alias-based and extension-based matching  
+- Explicit user validation and feedback checkpoints at each stage  
+- Generation of additive alignment packages using `import` and `alias`  
+- Semantic extension support via customizable metadata libraries  
+
+📄 You can find the full prompt specification here:  
+[`prompts/sysmlv2_alignment_pipeline.md`](./prompts/sysmlv2_alignment_pipeline.md)
+
 ## Related Work
 The model shows the implementation of SysML v2 model and Dataspaces in the published paper **Collaborative Model-Based Systems Engineering Using Dataspaces and SysML v2** [Doi](https://doi.org/10.3390/systems12010018) as the contribution from [Product and Systems Engineering Group](https://www.tu-ilmenau.de/en/university/departments/department-of-mechanical-engineering/profile/institutes-and-groups/engineering-design-group), Department of Mechanical Engineering, Technische Universität Ilmenau.
->>>>>>> Stashed changes
