@@ -1,0 +1,11 @@
+element,issue
+OverallSystem_v1::EnergySystem,OEM alias target not found
+MeasuringSystem_v1::EnergySystem,Supplier alias target not found
+OverallSystem_v1::loadcell,OEM alias target not found
+MeasuringSystem_v1::loadcell_v1,Supplier alias target not found
+def_LoadCell,Low-confidence mapping
+def_LoadCell,Low-confidence mapping
+def_EnergySystem,Low-confidence mapping
+def_port_Mass,Low-confidence mapping
+loadcell,Low-confidence mapping
+EnergySystem,Low-confidence mapping

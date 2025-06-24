@@ -1,0 +1,93 @@
+[
+  {
+    "oem_element": "def_LoadCell",
+    "supplier_element": "loadcell_def",
+    "mapping_type": "alias",
+    "confidence": 0.67,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "def_LoadCell",
+    "supplier_element": "loadcell_v1",
+    "mapping_type": "#RequireModification allocation",
+    "confidence": 0.5499999999999999,
+    "rationale": "Name similarity with compatible element types (auto-converted from alias due to type mismatch)"
+  },
+  {
+    "oem_element": "def_EnergySystem",
+    "supplier_element": "EnergySystem_def",
+    "mapping_type": "alias",
+    "confidence": 0.75,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "def_EnergySystem",
+    "supplier_element": "EnergySystem",
+    "mapping_type": "#RequireModification allocation",
+    "confidence": 0.71,
+    "rationale": "Name similarity with compatible element types (auto-converted from alias due to type mismatch)"
+  },
+  {
+    "oem_element": "def_port_MeasuringInfo",
+    "supplier_element": "port_MeasuringInfo_def",
+    "mapping_type": "alias",
+    "confidence": 0.82,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "def_port_Mass",
+    "supplier_element": "port_Mass_def",
+    "mapping_type": "alias",
+    "confidence": 0.69,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "def_MessDataInterface",
+    "supplier_element": "MessDataInterface_def",
+    "mapping_type": "alias",
+    "confidence": 0.81,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "loadcell",
+    "supplier_element": "loadcell_def",
+    "mapping_type": "#RequireModification allocation",
+    "confidence": 0.65,
+    "rationale": "Name similarity with compatible element types (auto-converted from alias due to type mismatch)"
+  },
+  {
+    "oem_element": "loadcell",
+    "supplier_element": "loadcell_v1",
+    "mapping_type": "alias",
+    "confidence": 0.84,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "EnergySystem",
+    "supplier_element": "EnergySystem_def",
+    "mapping_type": "#RequireModification allocation",
+    "confidence": 0.71,
+    "rationale": "Name similarity with compatible element types (auto-converted from alias due to type mismatch)"
+  },
+  {
+    "oem_element": "EnergySystem",
+    "supplier_element": "EnergySystem",
+    "mapping_type": "alias",
+    "confidence": 1.0,
+    "rationale": "Name similarity with compatible element types"
+  },
+  {
+    "oem_element": "OverallSystem_v1::EnergySystem",
+    "supplier_element": "MeasuringSystem_v1::EnergySystem",
+    "mapping_type": "#FullyMatched allocation",
+    "confidence": 1.0,
+    "rationale": "Explicit user extension declares semantic match of energy systems"
+  },
+  {
+    "oem_element": "OverallSystem_v1::loadcell",
+    "supplier_element": "MeasuringSystem_v1::loadcell_v1",
+    "mapping_type": "#RequireComplement allocation",
+    "confidence": 0.8,
+    "rationale": "Structural similarity; Supplier adds extra sensor features"
+  }
+]
