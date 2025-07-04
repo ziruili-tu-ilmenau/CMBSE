@@ -8,6 +8,7 @@ package OEMGeneralDefinition{
         part def def_OverallSystem{
             /*overall system that OEM want to develop, which will measure and show the mass of one object*/
             port port_MeasuringInfo:def_port_MeasuringInfo;
+            /*output port which send the result of measuring */
             port port_Mass:def_port_Mass;
             attribute Loadcellnumber:Real;
         }
@@ -16,15 +17,17 @@ package OEMGeneralDefinition{
             attribute maximumCapacity:>ISQ::mass;
             attribute voltage:>ISQ::voltage;
             port port_Inputmass:def_port_Mass;
+            /*input port for load cell to measure the object*/
             port port_InputEnergy:def_port_Energy;
+            /*input port (for load cell) which get the electical power*/
             port port_messinfo:GeneralPortDefinition::def_port_MeasuringInfo;
+            /*output port which send the result of measuring */
 		}
-        part def def_MeasuringRing{
-            /*subsystem 2, which is the place where the measuring object can be located*/
-        }
         part def def_EnergySystem{
-            /*subsystem 3, energy system which can supply power for all system element. In this example only for load cell*/
+            /*subsystem 2, energy system which can supply power for all system element. In this example only for load cell*/
             port port_OutputEnergy:~def_port_Energy;
+            /*conjugated input port which supply the electical power*/
+            /*"~" means conjugated port*/
 	    }
     }
     package GeneralPortDefinition{
@@ -56,16 +59,6 @@ package OEMGeneralDefinition{
             flow p2.inputVoltage to p1.inputVoltage;
         }
     }
-    package GeneralRequirementDefinition{
-        requirement def def_MeasurementRequirement {
-            doc /* The overall system should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
-            
-            attribute staticLoadRequired:>ISQ::force;
-            attribute dynamicLoadRequired:>ISQ::force;
-            attribute LoadAllowed:>ISQ::force;
-            require constraint {LoadAllowed>=staticLoadRequired+dynamicLoadRequired}
-            }
-    }
 }
 
 package LoadCellSubsystemRequirement{
@@ -75,33 +68,21 @@ package LoadCellSubsystemRequirement{
         public import OEMGeneralDefinition::*;
         package PartsTree{
             part OverallSystem_v1 : GeneralPartDefinition::def_OverallSystem{
+                /*use (symbol':') the definition to define the overall system, which will heritate all the properties of definitions*/
                 attribute num redefines GeneralPartDefinition::def_OverallSystem::Loadcellnumber=3;
+                /*redefine the attribute to assign the value*/
                 part loadcell:GeneralPartDefinition::def_LoadCell{
+                /*define the hierarchie, loadcell is inside of overall system, which means loadcell is the subsystem of overall system */
                     attribute loadcellvoltage redefines GeneralPartDefinition::def_LoadCell::voltage=12[V];
                     attribute loadcellCapacity redefines GeneralPartDefinition::def_LoadCell::maximumCapacity;
                     }
-                part MeasuringRing:GeneralPartDefinition::def_MeasuringRing;
-                part EnergySystem:GeneralPartDefinition::def_EnergySystem{
-                }
+                part EnergySystem:GeneralPartDefinition::def_EnergySystem{}
                 interface energyInterface:GeneralInterfaceDefinition::def_EnergyInterface
                     connect EnergySystem.port_OutputEnergy to loadcell.port_InputEnergy;
+                    /*port from energy system is connected to corresponding port from load cell (output-->input)*/
                 bind loadcell.port_messinfo = OverallSystem_v1.port_MeasuringInfo;
-                satisfy requirements::MeasurementRequirement by OverallSystem_v1{
-                    requirement MeasurementRequirement :>> requirements::MeasurementRequirement{
-                        attribute redefines loadallowed = OverallSystem_v1.num * OverallSystem_v1.loadcell.loadcellCapacity;
-                    }
-                }
+                /*bind means output-->output*/
             }
-        }
-        package requirements {
-            requirement MeasurementRequirement: GeneralRequirementDefinition::def_MeasurementRequirement {
-                doc /* The load cell should provide a certain static measurement range in the direction of gravity and a certain dynamic measurement range. */
-                
-                attribute redefines staticLoadRequired =350[N] ;
-                attribute redefines dynamicLoadRequired =10[N];
-                attribute loadallowed redefines LoadAllowed;
-                require constraint {loadallowed>=staticLoadRequired+dynamicLoadRequired}
-                }
         }
     }
 }
